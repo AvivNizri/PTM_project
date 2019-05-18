@@ -1,24 +1,27 @@
 package server_side;
 
-public class FileCacheManager implements CacheManager {
+import java.util.HashMap;
 
+public class FileCacheManager implements CacheManager<String,String> {
+	HashMap<String, String> hm = new HashMap<String,String>();  
+	
 	@Override
-	public boolean exist() {
-		// TODO Auto-generated method stub
+	public boolean exist(String p) {
+		if(hm.containsKey(p)) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
-	public Solution pull() {
-		// TODO Auto-generated method stub
-		return null;
+	public String pull(String p) {
+		return hm.get(p);
 	}
 
 	@Override
-	public boolean save(Problem p) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean save(String p, String s) {
+		String prev = hm.put(p,s);
+		return true;
 	}
-
 	
 }
