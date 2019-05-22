@@ -49,7 +49,7 @@ public class MySerialServer implements Server {
 	}
 	
 	public void stop() {
-		// TODO Auto-generated method stub
+		this.stop = true;
 		
 	}
 	@Override

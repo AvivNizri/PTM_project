@@ -19,9 +19,8 @@ public class FileCacheManager implements CacheManager<String,String> {
 	}
 
 	@Override
-	public boolean save(String p, String s) {
+	public void save(String p, String s) {
 		String prev = hm.put(p,s);
-		return true;
 	}
 	
 }

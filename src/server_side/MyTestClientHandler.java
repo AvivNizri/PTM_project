@@ -12,6 +12,13 @@ public class MyTestClientHandler implements ClientHandler {
 	Solver<String,String> sol;
 	CacheManager<String,String> cm;
 	
+	//Ctor
+	public MyTestClientHandler(Solver<String, String> sol, CacheManager<String, String> cm) {
+		super();
+		this.sol = sol;
+		this.cm = cm;
+	}
+
 	//Assistant method for the user input
 	private void readInputsAndSend(BufferedReader in, PrintWriter out,String exitStr){
 		try{
@@ -23,12 +30,12 @@ public class MyTestClientHandler implements ClientHandler {
 				}
 				else {
 					String s = sol.solve(line);
-					while(cm.save(line, s)!=true) {} //basically wait until the action was finished well
-					out.println(s);//returning the answer after solving and saving the problem
+					cm.save(line, s); 	//save the new k,v in the HM
+					out.println(s);		//returning the answer after solving and saving the problem
 					out.flush();
 				}
-				out.println(line);//must in every iteration
-				out.flush();
+				//out.println(line);//must in every iteration
+				//out.flush();
 			}
 		} catch(IOException e) { e.printStackTrace();}
 	}
