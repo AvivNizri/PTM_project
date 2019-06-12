@@ -1,43 +1,35 @@
 package server_side;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
-import java.io.IOException;
 
 public class MySerialServer implements Server {
 	private int port;
 	private ClientHandler ch;
 	private volatile boolean stop;
 	
-	
-	public MySerialServer(int port, ClientHandler ch) {
-		super();
-		this.port = port;
-		this.setCh(ch);
+	public MySerialServer(int port,ClientHandler ch) {
+	this.setPort(port);
+	this.setCh(ch);
+	setStop(false);
 	}
 	
-	private void runServer() throws Exception {
-		ServerSocket server=new ServerSocket(this.port);
-		server.setSoTimeout(1000);
-		while(!stop){
-			try{
-				Socket aClient=server.accept(); // blocking call
-					try{
-						this.ch.handleclient(aClient.getInputStream(), aClient.getOutputStream());
-						
-						aClient.getInputStream().close();
-						aClient.getOutputStream().close();
-						aClient.close();
-						
-					} catch(IOException e) {/*...*/}
-			}catch(SocketTimeoutException e) {/*...*/}
-		}
-		server.close();
+	private void runServer()throws Exception{
+		 ServerSocket server = new ServerSocket(this.port); server.setSoTimeout(1000); while (!stop) {
+		        try {
+		            Socket aClient = server.accept(); // blocking call 
+		            try {
+		            this.ch.handleclient(aClient.getInputStream(), aClient.getOutputStream());
+		            aClient.getInputStream().close(); 
+		            aClient.getOutputStream().close(); aClient.close();
+		        } catch (IOException e) {/*...*/ }
+		    }catch (SocketTimeoutException e) {/*...*/ }
+		} server.close();
 	}
 	
-	//should we use the try/catch?
-	public void start(){
+	public void start(){ // Need to check whether we can cancel the try/catch
 		new Thread(()->{
 			try {
 				runServer();
@@ -45,25 +37,17 @@ public class MySerialServer implements Server {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		}).start();
+		}).start();   
 	}
 	
 	public void stop() {
-		this.stop = true;
-		
+		stop=true;		
 	}
+	
 	@Override
 	public void open(int port, ClientHandler c) {
 		// TODO Auto-generated method stub
 		
-	}
-
-	public int getPort() {
-		return port;
-	}
-
-	public void setPort(int port) {
-		this.port = port;
 	}
 
 	public ClientHandler getCh() {
@@ -74,6 +58,14 @@ public class MySerialServer implements Server {
 		this.ch = ch;
 	}
 
+	public int getPort() {
+		return port;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
 	public boolean isStop() {
 		return stop;
 	}
@@ -81,6 +73,4 @@ public class MySerialServer implements Server {
 	public void setStop(boolean stop) {
 		this.stop = stop;
 	}
-	
-	
 }

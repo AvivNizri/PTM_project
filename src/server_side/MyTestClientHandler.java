@@ -12,14 +12,23 @@ public class MyTestClientHandler implements ClientHandler {
 	Solver<String,String> sol;
 	CacheManager<String,String> cm;
 	
-	//Ctor
-	public MyTestClientHandler(Solver<String, String> sol, CacheManager<String, String> cm) {
-		super();
-		this.sol = sol;
-		this.cm = cm;
+	public MyTestClientHandler(Solver<String,String> solver, CacheManager<String,String> cacheManager ) {
+		this.sol = solver;
+		this.cm = cacheManager;
+}
+	
+	public void handleclient(InputStream input, OutputStream output) {
+		try {
+		BufferedReader userInput = new BufferedReader(new InputStreamReader(input));
+		PrintWriter outFromServer = new PrintWriter(output);
+		// correspond according to a well-defined protocol
+		readInputsAndSend(userInput, outFromServer, "end");
+		userInput.close(); 
+		outFromServer.close();		
+		} catch(UnknownHostException e) {}
+		catch(IOException e){}
 	}
 
-	//Assistant method for the user input
 	private void readInputsAndSend(BufferedReader in, PrintWriter out,String exitStr){
 		try{
 			String line;
@@ -34,25 +43,7 @@ public class MyTestClientHandler implements ClientHandler {
 					out.println(s);		//returning the answer after solving and saving the problem
 					out.flush();
 				}
-				//out.println(line);//must in every iteration
-				//out.flush();
 			}
 		} catch(IOException e) { e.printStackTrace();}
-	}
-	
-	public void handleclient(InputStream input, OutputStream output) {
-		try{
-			
-			BufferedReader userInput=new BufferedReader(new InputStreamReader(input));
-			PrintWriter outFromServer=new PrintWriter(output);
-			
-			// correspond according to a well-defined protocol
-			readInputsAndSend(userInput,outFromServer,"end");
-			
-			userInput.close();
-			outFromServer.close();
-			
-			} catch(UnknownHostException e) {/*...*/}
-			catch(IOException e) {/*...*/}
 	}
 }
