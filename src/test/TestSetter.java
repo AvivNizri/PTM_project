@@ -1,13 +1,9 @@
 package test;
 
-import server_side.FileCacheManager;
+import java.util.List;
 
 // change this to match your code
-
-import server_side.MySerialServer;
-import server_side.MyTestClientHandler;
-import server_side.Server;
-import server_side.StringReverser;
+import server_side.*;
 
 public class TestSetter {
 	
@@ -17,7 +13,10 @@ public class TestSetter {
 	public static void runServer(int port) {
 		// put the code here that runs your server
 		// for example:
-		s=new MySerialServer(port, new MyTestClientHandler(new StringReverser(), new FileCacheManager())); 
+		CacheManager cm = new FileCacheManager();
+		Searcher<Pair<Integer,Integer>> searcher = new BestFirstSearch<>();
+		Solver<Searchable<Pair<Integer,Integer>>, List<State<Pair<Integer,Integer>>>> algo = new SearcherAdapt<>(searcher);
+		s=new MySerialServer(port, new ClientHandler(algo, cm)); 
 		s.start();
 	}
 
